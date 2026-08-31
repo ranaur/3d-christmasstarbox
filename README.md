@@ -2,68 +2,87 @@
 
 A 3D-printable Christmas star tree topper that doubles as a small box.
 Designed in [OpenSCAD](https://openscad.org/) — fully parametric, all
-dimensions can be tweaked at the top of `star_box_*.scad`.
+dimensions can be tweaked at the top of each `star_box_*.scad` file.
 
-There are 4 versions: Flat vs. Pyramid; and Middle vs. Default
+There are 4 versions: Flat vs. Pyramid, and Default vs. Middle:
 
-* Flat the box has a flat front. The Pyramid pyramid version each star point has a pyramidal profile.
-* The regular version has the base for inserting one of the star's points. The middle version has a shaft between two star points to fit the base.
-
-## Parts
-
-| File | Part | Print orientation |
-|------|------|-------------------|
-| `front.stl` | Front half-shell (star) | As exported — flat face on the bed |
-| `back.stl`  | Back half-shell with snap lip | As exported — flat face on the bed |
-| `base.stl`  | Conic base / tree-tip collar | As exported — wide end on the bed |
-
-### Pyramidal version (`star_box_pyramid.scad`)
-
-Faceted variant where both halves rise to a peak in the middle (classic
-3D star look) and sit on a small straight rim (`rim_h`, default 5 mm)
-that carries the snap fit — a tongue on the back clicks into a groove in
-the front rim.
-
-| File | Part | Print orientation |
-|------|------|-------------------|
-| `pyramid_front.stl` | Front pyramidal half-shell | Rim on the bed, apex up |
-| `pyramid_back.stl`  | Back pyramidal half-shell (snap tongue) | Tongue on the bed, apex up |
-| `pyramid_base.stl`  | Conic base (round socket for the mounting shaft) | Wide end on the bed |
-
-The hollow interior of the pyramid faces are shallow overhangs — print
-with supports, solid infill, or increase `peak` for steeper facets.
-
-Instead of sinking a star point into the cone, each half carries a
-half-round mounting shaft in the valley between the two bottom points.
-When the halves snap together they form a round shaft that inserts into
-a matching socket in the cone. Tune with `shaft_r` (radius), `shaft_len`
-(protrusion), `shaft_embed` (root depth into the star) and
-`socket_depth` (socket depth in the cone).
+- **Flat** (`star_box_flat*.scad`) — the box has flat front and back
+  faces.
+- **Pyramid** (`star_box_pyramid*.scad`) — each half rises to a peak in
+  the middle (classic 3D star look), sitting on a small straight rim
+  (`rim_h`, default 5 mm) that carries the snap fit.
+- **Default** (`star_box_flat.scad`, `star_box_pyramid.scad`) — the
+  star's bottom point sinks into a star-shaped socket in the base.
+- **Middle** (`star_box_flat_middle.scad`,
+  `star_box_pyramid_middle.scad`) — a round mounting shaft between the
+  two bottom star points inserts into a round socket in the base.
 
 ## How it works
 
-- The **front** and **back** are star-shaped trays. The back has an inner
-  lip with a snap ridge that clicks into a matching groove inside the
-  front, closing the box.
-- The **conic base** slides over the tip of the tree from below. In both
-  versions each half carries a half-round mounting shaft in the valley
-  between the two bottom points; snapped together they form a round shaft
-  that inserts into a round socket in the cone, locking the halves
-  together. Tune with `shaft_r`, `shaft_len`, `shaft_embed` and
-  `socket_depth`.
+- The **front** and **back** are star-shaped half-shells that snap
+  together to close the box (snap ridge/tongue on the back clicks into a
+  groove in the front, `clearance` = 0.25 mm).
+- The **conic base** slides over the tip of the tree from below and
+  locks the two halves together — via the bottom star point (default
+  versions) or the mounting shaft (middle versions).
+- In the middle versions each half carries a half-round shaft in the
+  valley between the two bottom points; when the halves snap together
+  they form a round shaft.
+
+### Shaft parameters (middle versions)
+
+| Parameter | Meaning | Default (flat / pyramid) |
+|-----------|---------|--------------------------|
+| `shaft_r` | Shaft radius | 6 / 4.75 mm |
+| `shaft_len` | Protrusion past the star valley | 25 mm |
+| `shaft_embed` | Root depth into the star body | 6 mm |
+| `socket_depth` | Socket depth in the cone | 20 / 15 mm |
+
+Keep `shaft_r` below `thickness / 2` (flat) or `rim_h` (pyramid).
+
+## Parts
+
+Each version renders three parts:
+
+| Part | Description | Print orientation |
+|------|-------------|-------------------|
+| `front` | Front half-shell | Flat: face on the bed. Pyramid: rim on the bed, apex up |
+| `back`  | Back half-shell with snap lip/tongue | Flat: face on the bed. Pyramid: tongue on the bed, apex up |
+| `base`  | Conic base / tree-tip collar | Wide end on the bed |
+
+Included STLs: `<variant>_<part>.stl` for every combination, e.g.
+`flat_front.stl`, `pyramid_middle_base.stl`.
+
+Print notes:
+
+- Flat middle: the half-round shaft overhangs at the mating plane when
+  the face is on the bed — enable supports under the shaft.
+- Pyramid: the hollow interior of the pyramid faces are shallow
+  overhangs — print with supports, solid infill, or increase `peak` for
+  steeper facets.
 
 ## Default dimensions
 
-- Star: 150 mm tip-to-tip, 40 mm deep, 2 mm walls
-- Cone: 60 mm tall, fits a tree tip up to ~26 mm diameter
+- Star: 150 mm tip-to-tip; flat: 40 mm deep, 2 mm walls; pyramid:
+  28 mm peak per half on a 5 mm rim, 2.4 mm walls
+- Cone: 50–60 mm tall depending on version, fits a tree tip up to
+  ~22–26 mm diameter
 - Fit clearance: 0.25 mm (adjust `clearance` for your printer)
 
 ## Regenerating the STLs
 
+With GNU make and OpenSCAD on the PATH:
+
 ```sh
-openscad -o front.stl -D part=\"front\" star_box.scad
-openscad -o back.stl  -D part=\"back\"  star_box.scad
-openscad -o base.stl  -D part=\"base\"  star_box.scad
+make                # all 12 STLs (3 parts x 4 variants)
+make pyramid_middle # one variant
+make OPENSCAD="C:/Program Files/OpenSCAD/openscad.com"  # custom binary
+```
+
+Or render a single part directly:
+
+```sh
+openscad -o flat_front.stl -D part=\"front\" star_box_flat.scad
 ```
 
 Set `part = "assembly"` in the file (or via `-D`) to preview the whole
@@ -72,5 +91,13 @@ assembly in the OpenSCAD GUI.
 ## Print settings (suggested)
 
 - Material: PETG or PLA
-- Layer height: 0.2 mm, 2–3 perimeters, no supports needed
+- Layer height: 0.2 mm, 2–3 perimeters
 - If the snap fit is too tight/loose, tune `clearance` and `bump`
+
+## Credits & license
+
+This project was heavily made by AI ([Devin](https://devin.ai) — design,
+OpenSCAD code, STLs and docs), directed by a human.
+
+Released under [CC0 1.0](LICENSE) — public domain dedication. Use it,
+remix it, print it, sell it; no attribution required.
