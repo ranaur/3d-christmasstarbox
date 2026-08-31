@@ -2,7 +2,12 @@
 
 A 3D-printable Christmas star tree topper that doubles as a small box.
 Designed in [OpenSCAD](https://openscad.org/) — fully parametric, all
-dimensions can be tweaked at the top of `star_box.scad`.
+dimensions can be tweaked at the top of `star_box_*.scad`.
+
+There are 4 versions: Flat vs. Pyramid; and Middle vs. Default
+
+* Flat the box has a flat front. The Pyramid pyramid version each star point has a pyramidal profile.
+* The regular version has the base for inserting one of the star's points. The middle version has a shaft between two star points to fit the base.
 
 ## Parts
 
