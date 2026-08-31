@@ -50,9 +50,8 @@ Each version renders three parts:
 | `back`  | Back half-shell with snap lip/tongue | Flat: face on the bed. Pyramid: tongue on the bed, apex up |
 | `base`  | Conic base / tree-tip collar | Wide end on the bed |
 
-Included STLs: `front.stl`, `back.stl`, `base.stl` (flat) and
-`pyramid_front.stl`, `pyramid_back.stl`, `pyramid_base.stl` (pyramid),
-rendered from the middle versions.
+Included STLs: `<variant>_<part>.stl` for every combination, e.g.
+`flat_front.stl`, `pyramid_middle_base.stl`.
 
 Print notes:
 
@@ -72,13 +71,20 @@ Print notes:
 
 ## Regenerating the STLs
 
+With GNU make and OpenSCAD on the PATH:
+
 ```sh
-openscad -o front.stl -D part=\"front\" star_box_flat_middle.scad
-openscad -o back.stl  -D part=\"back\"  star_box_flat_middle.scad
-openscad -o base.stl  -D part=\"base\"  star_box_flat_middle.scad
+make                # all 12 STLs (3 parts x 4 variants)
+make pyramid_middle # one variant
+make OPENSCAD="C:/Program Files/OpenSCAD/openscad.com"  # custom binary
 ```
 
-Swap in any of the other `star_box_*.scad` files to render that version.
+Or render a single part directly:
+
+```sh
+openscad -o flat_front.stl -D part=\"front\" star_box_flat.scad
+```
+
 Set `part = "assembly"` in the file (or via `-D`) to preview the whole
 assembly in the OpenSCAD GUI.
 
