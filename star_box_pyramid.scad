@@ -6,7 +6,8 @@
 // Parts:
 //   part = "front"    -> front pyramidal half-shell (prints rim down)
 //   part = "back"     -> back pyramidal half-shell with snap tongue
-//   part = "base"     -> conic base locking the halves at the bottom point
+//   part = "base"     -> conic base that slides onto the mounting shaft
+//                        between the two bottom points
 //   part = "assembly" -> preview of all parts assembled
 //
 // Render STLs with:
@@ -24,6 +25,12 @@ peak          = 28;            // pyramid height (apex above the rim)
 rim_h         = 5;             // straight rim height per half (the "base")
 wall          = 2.4;           // wall thickness
 clearance     = 0.25;          // printing clearance for fits
+star_rot      = 36;            // one point straight up, valley straight down
+
+/* ---------- Mounting shaft (between the two bottom points) ---------- */
+shaft_r       = 4.75;          // shaft radius (keep below rim_h)
+shaft_len     = 25;            // how far the shaft protrudes past the valley
+shaft_embed   = 6;             // how far the shaft roots into the star body
 
 /* ---------- Snap-fit parameters ---------- */
 lip_p         = 4;             // how far the back tongue protrudes past its rim
@@ -33,20 +40,20 @@ groove_h      = 1.8;           // groove band height (slightly taller)
 ridge_z0      = 0.8;           // ridge start, measured from the tongue tip
 
 /* ---------- Conic base parameters ---------- */
-cone_h        = 60;
-cone_r_bottom = 30;
-cone_r_top    = 24;
-socket_depth  = 22;            // how deep the star bottom tip sinks into the cone
-tree_hole_r   = 13;
-tree_hole_top = 5;
-tree_hole_h   = 34;
+cone_h        = 50;
+cone_r_bottom = 22;
+cone_r_top    = 12;
+socket_depth  = 15;            // how deep the shaft sinks into the cone
+tree_hole_r   = 11;
+tree_hole_top = 4;
+tree_hole_h   = 30;
 
 $fn = 96;
 
 /* ---------- 2D star ---------- */
 module star2d() {
     polygon([for (i = [0 : 2 * star_points - 1])
-        let (a = -90 + i * 180 / star_points,
+        let (a = -90 + star_rot + i * 180 / star_points,
              rad = (i % 2 == 0) ? R : r)
         [rad * cos(a), rad * sin(a)]]);
 }
@@ -77,10 +84,26 @@ module half_shell(rim = rim_h) {
     }
 }
 
+/* ---------- Half of the mounting shaft ----------
+   Full cylinder along -Y from the bottom valley, cut at the mating
+   plane (z = 0), keeping the z >= 0 half. Each half-shell carries one
+   half; together they form a round shaft the base slides onto. */
+module half_shaft() {
+    intersection() {
+        translate([0, -(r - shaft_embed), 0])
+            rotate([90, 0, 0])
+                cylinder(h = shaft_len + shaft_embed, r = shaft_r);
+        translate([-2 * R, -2 * R, 0]) cube([4 * R, 4 * R, 2 * shaft_r]);
+    }
+}
+
 /* ---------- Front: recess + snap groove in the rim ---------- */
 module front() {
     difference() {
-        half_shell();
+        union() {
+            half_shell();
+            half_shaft();
+        }
         // recess for the back tongue: inner half of the rim wall removed
         ring(-wall / 2, -wall - 0.1, -0.01, lip_p + 0.06);
         // snap groove in the recess wall
@@ -95,35 +118,24 @@ module back() {
     ring(-wall / 2 - clearance, -wall, 0, lip_p + 0.01);
     // snap ridge near the tongue tip
     ring(-wall / 2 - clearance + bump, -wall, ridge_z0, ridge_h);
-    // rim and pyramid above the mating plane
-    translate([0, 0, lip_p]) half_shell();
-}
-
-/* ---------- Assembled outer solid (for the cone socket) ---------- */
-module half_outer(extra = 0) {
-    linear_extrude(rim_h) star_offset(extra);
-    translate([0, 0, rim_h])
-        linear_extrude(peak, scale = 0.01) star_offset(extra);
-}
-
-module star_solid(extra = 0) {
-    // mating plane at z = 0, symmetric halves
-    half_outer(extra);
-    mirror([0, 0, 1]) half_outer(extra);
+    // rim, pyramid and shaft half above the mating plane
+    translate([0, 0, lip_p]) {
+        half_shell();
+        half_shaft();
+    }
 }
 
 /* ---------- Conic base ----------
-   Modeled in print orientation: wide end on the bed, axis = Z. */
+   Modeled in print orientation: wide end on the bed, axis = Z.
+   A round socket in the top receives the mounting shaft. */
 module base() {
     difference() {
         cylinder(h = cone_h, r1 = cone_r_bottom, r2 = cone_r_top);
         translate([0, 0, -0.01])
             cylinder(h = tree_hole_h, r1 = tree_hole_r, r2 = tree_hole_top);
-        // star-tip socket: assembled star (with clearance), tip down,
-        // sunk socket_depth into the cone top
-        translate([0, 0, cone_h - socket_depth + R])
-            rotate([90, 0, 0])
-                star_solid(clearance);
+        // shaft socket
+        translate([0, 0, cone_h - socket_depth])
+            cylinder(h = socket_depth + 0.01, r = shaft_r + clearance);
     }
 }
 
@@ -132,7 +144,7 @@ module assembly() {
     color("firebrick") mirror([0, 0, 1]) front();
     color("darkred") translate([0, 0, -lip_p]) back();
     color("goldenrod")
-        translate([0, -R + socket_depth - cone_h, 0])
+        translate([0, -(r + shaft_len) + socket_depth - cone_h, 0])
             rotate([-90, 0, 0]) base();
 }
 
