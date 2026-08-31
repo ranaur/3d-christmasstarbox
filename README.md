@@ -89,3 +89,11 @@ assembly in the OpenSCAD GUI.
 - Material: PETG or PLA
 - Layer height: 0.2 mm, 2–3 perimeters
 - If the snap fit is too tight/loose, tune `clearance` and `bump`
+
+## Credits & license
+
+This project was heavily made by AI ([Devin](https://devin.ai) — design,
+OpenSCAD code, STLs and docs), directed by a human.
+
+Released under [CC0 1.0](LICENSE) — public domain dedication. Use it,
+remix it, print it, sell it; no attribution required.
