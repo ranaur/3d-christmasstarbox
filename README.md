@@ -11,6 +11,8 @@ Two variants are included:
   rise to a peak in the middle (classic 3D star look), sitting on a
   small straight rim (`rim_h`, default 5 mm) that carries the snap fit.
 
+Each variant has the regular version has the base for inserting one of the star's points and the "\_middle" version has a shaft between two star points to fit the base.
+
 ## How it works
 
 - The **front** and **back** are star-shaped half-shells that snap
@@ -33,6 +35,7 @@ Two variants are included:
 | `socket_depth` | Socket depth in the cone | 20 / 15 mm |
 
 Keep `shaft_r` below `thickness / 2` (flat) or `rim_h` (pyramidal).
+dimensions can be tweaked at the top of `star_box_*.scad`.
 
 ## Parts
 
