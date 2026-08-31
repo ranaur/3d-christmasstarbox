@@ -12,6 +12,22 @@ dimensions can be tweaked at the top of `star_box.scad`.
 | `back.stl`  | Back half-shell with snap lip | As exported — flat face on the bed |
 | `base.stl`  | Conic base / tree-tip collar | As exported — wide end on the bed |
 
+### Pyramidal version (`star_box_pyramid.scad`)
+
+Faceted variant where both halves rise to a peak in the middle (classic
+3D star look) and sit on a small straight rim (`rim_h`, default 5 mm)
+that carries the snap fit — a tongue on the back clicks into a groove in
+the front rim.
+
+| File | Part | Print orientation |
+|------|------|-------------------|
+| `pyramid_front.stl` | Front pyramidal half-shell | Rim on the bed, apex up |
+| `pyramid_back.stl`  | Back pyramidal half-shell (snap tongue) | Tongue on the bed, apex up |
+| `pyramid_base.stl`  | Conic base (socket matches the pyramidal star) | Wide end on the bed |
+
+The hollow interior of the pyramid faces are shallow overhangs — print
+with supports, solid infill, or increase `peak` for steeper facets.
+
 ## How it works
 
 - The **front** and **back** are star-shaped trays. The back has an inner
