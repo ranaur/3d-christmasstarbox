@@ -23,19 +23,28 @@ the front rim.
 |------|------|-------------------|
 | `pyramid_front.stl` | Front pyramidal half-shell | Rim on the bed, apex up |
 | `pyramid_back.stl`  | Back pyramidal half-shell (snap tongue) | Tongue on the bed, apex up |
-| `pyramid_base.stl`  | Conic base (socket matches the pyramidal star) | Wide end on the bed |
+| `pyramid_base.stl`  | Conic base (round socket for the mounting shaft) | Wide end on the bed |
 
 The hollow interior of the pyramid faces are shallow overhangs — print
 with supports, solid infill, or increase `peak` for steeper facets.
+
+Instead of sinking a star point into the cone, each half carries a
+half-round mounting shaft in the valley between the two bottom points.
+When the halves snap together they form a round shaft that inserts into
+a matching socket in the cone. Tune with `shaft_r` (radius), `shaft_len`
+(protrusion), `shaft_embed` (root depth into the star) and
+`socket_depth` (socket depth in the cone).
 
 ## How it works
 
 - The **front** and **back** are star-shaped trays. The back has an inner
   lip with a snap ridge that clicks into a matching groove inside the
   front, closing the box.
-- The **conic base** slides over the tip of the tree from below. The
-  star's bottom point sinks into a star-shaped socket cut into the top of
-  the cone, locking the two halves together.
+- The **conic base** slides over the tip of the tree from below. In the
+  flat version the star's bottom point sinks into a star-shaped socket in
+  the cone; in the pyramidal version the round mounting shaft between the
+  two bottom points inserts into a round socket, locking the halves
+  together.
 
 ## Default dimensions
 
