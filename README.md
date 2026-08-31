@@ -40,11 +40,12 @@ a matching socket in the cone. Tune with `shaft_r` (radius), `shaft_len`
 - The **front** and **back** are star-shaped trays. The back has an inner
   lip with a snap ridge that clicks into a matching groove inside the
   front, closing the box.
-- The **conic base** slides over the tip of the tree from below. In the
-  flat version the star's bottom point sinks into a star-shaped socket in
-  the cone; in the pyramidal version the round mounting shaft between the
-  two bottom points inserts into a round socket, locking the halves
-  together.
+- The **conic base** slides over the tip of the tree from below. In both
+  versions each half carries a half-round mounting shaft in the valley
+  between the two bottom points; snapped together they form a round shaft
+  that inserts into a round socket in the cone, locking the halves
+  together. Tune with `shaft_r`, `shaft_len`, `shaft_embed` and
+  `socket_depth`.
 
 ## Default dimensions
 
